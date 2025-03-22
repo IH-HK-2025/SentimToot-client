@@ -10,11 +10,15 @@ import {
 } from "@mantine/core";
 import { useContext } from "react";
 import { AuthContext } from "../context/auth.context";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 const Profile = () => {
-  const { isLoggedIn, isLoading, user, authError, logOutUser } =
-    useContext(AuthContext);
+  const authContext = useContext(AuthContext);
+  if (!authContext) {
+    throw new Error("AuthContext must be used within an AuthProviderWrapper");
+  }
+  
+  const { isLoggedIn, isLoading, user, authError, logOutUser } = authContext;
   const navigate = useNavigate();
 
   if (!isLoggedIn) {

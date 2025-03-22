@@ -26,7 +26,11 @@ interface FormValues {
 
 const SignIn = () => {
   const navigate = useNavigate();
-  const { storeToken, authenticateUser } = useContext(AuthContext);
+  const authContext = useContext(AuthContext);
+  if (!authContext) {
+    throw new Error("AuthContext must be used within an AuthProviderWrapper");
+  }
+  const { storeToken, authenticateUser } = authContext;
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
 
