@@ -4,6 +4,7 @@ import { HomePage } from "./pages/HomePage";
 import SignUp from "./auth/SignUp";
 import SignIn from "./auth/SignIn";
 import Profile from "./auth/Profile";
+import ForgotPassword from "./auth/forgotPassword";
 
 function App() {
   return (
@@ -14,6 +15,7 @@ function App() {
           <Route path="/signup" element={<SignUp />} />
           <Route path="/signin" element={<SignIn />} />
           <Route path="/profile" element={<Profile />} />
+          <Route path="/forgot-password" element={<ForgotPassword />} />
         </Routes>
       </Layout>
     </BrowserRouter>
