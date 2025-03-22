@@ -62,7 +62,7 @@ import {
     return (
       <Container size={420} my={40} mt={120}>
         <Title ta="center" mb="md">
-          Welcome Back
+          Change Password
         </Title>
   
         <Text c="dimmed" size="sm" ta="center" mt={5}>
