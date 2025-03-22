@@ -4,7 +4,7 @@ import { HomePage } from "./pages/HomePage";
 import SignUp from "./auth/SignUp";
 import SignIn from "./auth/SignIn";
 import Profile from "./auth/Profile";
-import ForgotPassword from "./auth/forgotPassword";
+import ForgotPassword from "./auth/ForgotPassword";
 
 function App() {
   return (
