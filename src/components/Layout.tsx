@@ -1,5 +1,5 @@
 import { ReactNode } from "react";
-import { AppShell, Burger, Group, Text } from "@mantine/core";
+import { AppShell, Burger, Anchor, Stack, Group, Text } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
 import { Link } from "react-router-dom";
 import AuthDetails from "../auth/AuthDetails";
@@ -61,12 +61,35 @@ export function Layout({ children }: LayoutProps) {
       </AppShell.Header>
 
       <AppShell.Navbar p="md">
-        <Text p="sm" size="lg" fw={500}>
-          Menu
-        </Text>
-        <Group pl="sm" mt="xs">
-          <Link to="/">Home</Link>
-        </Group>
+        <Stack gap="sm" p="sm">
+          {/* Home Link */}
+          <Anchor component={Link} to="/" underline="never">
+            <Group gap="xs">
+              <Text>🏠 Home</Text>
+            </Group>
+          </Anchor>
+
+          {/* Trends Link */}
+          <Anchor component={Link} to="/trends" underline="never">
+            <Group gap="xs">
+              <Text>📈 Trends</Text>
+            </Group>
+          </Anchor>
+
+          {/* Post Toot Link */}
+          <Anchor component={Link} to="/post-toot" underline="never">
+            <Group gap="xs">
+              <Text>🆕 Post a Toot</Text>
+            </Group>
+          </Anchor>
+
+          {/* About Us Link */}
+          <Anchor component={Link} to="/about" underline="never">
+            <Group gap="xs">
+              <Text>ℹ️ About Us</Text>
+            </Group>
+          </Anchor>
+        </Stack>
       </AppShell.Navbar>
 
       <AppShell.Main>{children}</AppShell.Main>

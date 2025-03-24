@@ -4,6 +4,7 @@ import { HomePage } from "./pages/HomePage";
 import SignUp from "./auth/SignUp";
 import SignIn from "./auth/SignIn";
 import Profile from "./auth/Profile";
+import PostToot from "./pages/PostToot";
 import ForgotPassword from "./auth/ForgotPassword";
 import ProtectedRoute from "./components/Protectedroutes";
 function App() {
@@ -12,11 +13,11 @@ function App() {
       <Layout>
         <Routes>
           <Route path="/" element={<HomePage />} />
+          <Route path="/post-toot" element={<PostToot />} />
           <Route path="/signup" element={<SignUp />} />
           <Route path="/signin" element={<SignIn />} />
           <Route path="/forgot-password" element={<ForgotPassword />} />
 
-          
           {/* protected routes need to be added here */}
           <Route
             path="/profile"
