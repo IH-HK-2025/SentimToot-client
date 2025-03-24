@@ -12,7 +12,7 @@ import {
   Checkbox,
 } from "@mantine/core";
 import { useForm } from "@mantine/form";
-import { useContext, useState } from "react";
+import { useContext, useState, useEffect } from "react"; // Added useEffect
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { AuthContext } from "../context/auth.context";
@@ -30,16 +30,23 @@ const SignIn = () => {
   if (!authContext) {
     throw new Error("AuthContext must be used within an AuthProviderWrapper");
   }
-  const { storeToken, authenticateUser } = authContext;
+  
+  const { storeToken, authenticateUser, isLoggedIn } = authContext; // Added isLoggedIn
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
+
+  // Add this useEffect to handle navigation after authentication
+  useEffect(() => {
+    if (isLoggedIn) {
+      navigate("/profile");
+    }
+  }, [isLoggedIn, navigate]);
 
   const form = useForm<FormValues>({
     initialValues: {
       email: "",
       password: "",
     },
-
     validate: {
       email: (value) => (/^\S+@\S+$/.test(value) ? null : "Invalid email"),
     },
@@ -48,11 +55,13 @@ const SignIn = () => {
   const handleSubmit = async (values: FormValues) => {
     try {
       setLoading(true);
+      setErrorMessage(null);
+      
       const response = await axios.post(`${API_URL}/api/auth/login`, values);
-
       storeToken(response.data.authToken);
       await authenticateUser();
-      navigate("/profile");
+      
+      // Removed navigate from here - now handled by useEffect
     } catch (error) {
       if (axios.isAxiosError(error)) {
         setErrorMessage(error.response?.data?.message || "Invalid credentials");

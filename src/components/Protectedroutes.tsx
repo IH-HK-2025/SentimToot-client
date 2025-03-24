@@ -7,17 +7,20 @@ interface ProtectedRouteProps {
 }
 
 function ProtectedRoute({ children }: ProtectedRouteProps) {
-    const authContext = useContext(AuthContext);
-    if (!authContext) {
-      throw new Error("AuthContext must be used within an AuthProviderWrapper");
-    }
+  const authContext = useContext(AuthContext);
   
-    const {  isLoading, isLoggedIn } = authContext;
-  
-  if (isLoading) return <p>Loading ...</p>;
+  if (!authContext) {
+    throw new Error("AuthContext must be used within an AuthProviderWrapper");
+  }
+
+  const { isLoading, isLoggedIn } = authContext;
+
+  if (isLoading) {
+    return <div>Loading...</div>;
+  }
 
   if (!isLoggedIn) {
-    return <Navigate to="/signin" />;
+    return <Navigate to="/signin" replace />;
   }
 
   return children;
