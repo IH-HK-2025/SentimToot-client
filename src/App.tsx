@@ -5,7 +5,7 @@ import SignUp from "./auth/SignUp";
 import SignIn from "./auth/SignIn";
 import Profile from "./auth/Profile";
 import ForgotPassword from "./auth/ForgotPassword";
-
+import ProtectedRoute from "./components/Protectedroutes";
 function App() {
   return (
     <BrowserRouter>
@@ -14,8 +14,18 @@ function App() {
           <Route path="/" element={<HomePage />} />
           <Route path="/signup" element={<SignUp />} />
           <Route path="/signin" element={<SignIn />} />
-          <Route path="/profile" element={<Profile />} />
           <Route path="/forgot-password" element={<ForgotPassword />} />
+
+          
+          {/* protected routes need to be added here */}
+          <Route
+            path="/profile"
+            element={
+              <ProtectedRoute>
+                <Profile />
+              </ProtectedRoute>
+            }
+          />
         </Routes>
       </Layout>
     </BrowserRouter>
