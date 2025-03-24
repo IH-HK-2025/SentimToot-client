@@ -21,15 +21,15 @@ const Profile: React.FC = () => {
     throw new Error("AuthContext must be used within an AuthProviderWrapper");
   }
 
-  const { isLoggedIn, isLoading, user, authError, logOutUser } = authContext;
+  const {  isLoading, user, authError, logOutUser } = authContext;
   const storeToken = localStorage.getItem("authToken");
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
   const navigate = useNavigate();
 
-  if (!isLoggedIn) {
-    navigate("/signin");
-    return null;
+  const handleLogout = () => {
+    logOutUser()
+    navigate("/signin")
   }
 
   const handleDelete = (id: number | undefined) => {
@@ -96,7 +96,7 @@ const Profile: React.FC = () => {
         </Group>
 
         <Group mt="xl">
-          <Button variant="outline" color="blue" onClick={logOutUser}>
+          <Button variant="outline" color="blue" onClick={() =>handleLogout()}>
             Logout
           </Button>
           <Button variant="outline" color="red" onClick={() => handleDelete(user?.id)} disabled={loading}>
