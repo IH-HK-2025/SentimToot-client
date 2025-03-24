@@ -8,7 +8,7 @@ interface ProtectedRouteProps {
 
 function ProtectedRoute({ children }: ProtectedRouteProps) {
   const authContext = useContext(AuthContext);
-  
+
   if (!authContext) {
     throw new Error("AuthContext must be used within an AuthProviderWrapper");
   }

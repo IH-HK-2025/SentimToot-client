@@ -30,15 +30,14 @@ const SignIn = () => {
   if (!authContext) {
     throw new Error("AuthContext must be used within an AuthProviderWrapper");
   }
-  
-  const { storeToken, authenticateUser, isLoggedIn } = authContext; // Added isLoggedIn
+
+  const { storeToken, authenticateUser, isLoggedIn } = authContext;
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
 
-  // Add this useEffect to handle navigation after authentication
   useEffect(() => {
     if (isLoggedIn) {
-      navigate("/profile");
+      navigate("/");
     }
   }, [isLoggedIn, navigate]);
 
@@ -56,12 +55,10 @@ const SignIn = () => {
     try {
       setLoading(true);
       setErrorMessage(null);
-      
+
       const response = await axios.post(`${API_URL}/api/auth/login`, values);
       storeToken(response.data.authToken);
       await authenticateUser();
-      
-      // Removed navigate from here - now handled by useEffect
     } catch (error) {
       if (axios.isAxiosError(error)) {
         setErrorMessage(error.response?.data?.message || "Invalid credentials");
