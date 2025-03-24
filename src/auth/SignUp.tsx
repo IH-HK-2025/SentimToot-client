@@ -45,7 +45,7 @@ const SignUp = () => {
     try {
       setLoading(true);
       await axios.post(`${API_URL}/api/auth/signup`, values);
-      navigate("/profile");
+      navigate("/signin");
     } catch (error) {
       if (axios.isAxiosError(error)) {
         setErrorMessage(error.response?.data?.message || "An error occurred");

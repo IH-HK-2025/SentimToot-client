@@ -8,23 +8,52 @@ import {
   Group,
   Button,
 } from "@mantine/core";
-import { useContext } from "react";
+import { useState, useContext } from "react";
 import { AuthContext } from "../context/auth.context";
 import { useNavigate } from "react-router-dom";
+import axios from "axios";
 
-const Profile = () => {
+const API_URL = import.meta.env.VITE_API_URL;
+
+const Profile: React.FC = () => {
   const authContext = useContext(AuthContext);
   if (!authContext) {
     throw new Error("AuthContext must be used within an AuthProviderWrapper");
   }
-  
+
   const { isLoggedIn, isLoading, user, authError, logOutUser } = authContext;
+  const storeToken = localStorage.getItem("authToken");
+  const [error, setError] = useState<string | null>(null);
+  const [loading, setLoading] = useState<boolean>(false);
   const navigate = useNavigate();
 
   if (!isLoggedIn) {
     navigate("/signin");
     return null;
   }
+
+  const handleDelete = (id: number | undefined) => {
+    if (!id) return;
+
+    setLoading(true);
+
+    axios
+      .delete(`${API_URL}/api/auth/users/${id}`, {
+        headers: { Authorization: `Bearer ${storeToken}` },
+      })
+      .then(() => {
+        setTimeout(() => {
+          logOutUser();
+          navigate("/signin");
+        }, 500);
+      })
+      .catch(() => {
+        setError("Failed to delete user.");
+      })
+      .finally(() => {
+        setLoading(false);
+      });
+  };
 
   if (isLoading) {
     return (
@@ -50,6 +79,12 @@ const Profile = () => {
           </Alert>
         )}
 
+        {error && (
+          <Alert color="red" mb="md" title="Error">
+            {error}
+          </Alert>
+        )}
+
         <Group mb="sm">
           <Text fw={500}>Name:</Text>
           <Text>{user?.name}</Text>
@@ -61,8 +96,11 @@ const Profile = () => {
         </Group>
 
         <Group mt="xl">
-          <Button variant="outline" color="red" onClick={() => logOutUser()}>
+          <Button variant="outline" color="blue" onClick={logOutUser}>
             Logout
+          </Button>
+          <Button variant="outline" color="red" onClick={() => handleDelete(user?.id)} disabled={loading}>
+            {loading ? "Deleting..." : "Delete Account"}
           </Button>
         </Group>
       </Card>
