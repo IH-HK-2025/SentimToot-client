@@ -4,11 +4,12 @@ import {
   Title,
   Container,
   Skeleton,
-  Alert,
   Group,
   Button,
+  PasswordInput,
+  Notification,
 } from "@mantine/core";
-import { useState, useContext } from "react";
+import { useState, useContext, useEffect } from "react";
 import { AuthContext } from "../context/auth.context";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
@@ -21,39 +22,64 @@ const Profile: React.FC = () => {
     throw new Error("AuthContext must be used within an AuthProviderWrapper");
   }
 
-  const {  isLoading, user, authError, logOutUser } = authContext;
+  const { isLoading, user, logOutUser } = authContext;
   const storeToken = localStorage.getItem("authToken");
   const [error, setError] = useState<string | null>(null);
-  const [loading, setLoading] = useState<boolean>(false);
+  const [success, setSuccess] = useState<string | null>(null);
+  const [mastodonToken, setMastodonToken] = useState<string>("");
   const navigate = useNavigate();
 
   const handleLogout = () => {
-    logOutUser()
-    navigate("/signin")
-  }
-
-  const handleDelete = (id: number | undefined) => {
-    if (!id) return;
-
-    setLoading(true);
-
-    axios
-      .delete(`${API_URL}/api/auth/users/${id}`, {
-        headers: { Authorization: `Bearer ${storeToken}` },
-      })
-      .then(() => {
-        setTimeout(() => {
-          logOutUser();
-          navigate("/signin");
-        }, 500);
-      })
-      .catch(() => {
-        setError("Failed to delete user.");
-      })
-      .finally(() => {
-        setLoading(false);
-      });
+    logOutUser();
+    navigate("/signin");
   };
+
+  const saveMastodonToken = async () => {
+    if (!mastodonToken) {
+      setError("Please provide your Mastodon access token.");
+      return;
+    }
+
+    try {
+      const response = await axios.post(
+        `${API_URL}/api/user/token`,
+        { mastodonToken },
+        { headers: { Authorization: `Bearer ${storeToken}` } }
+      );
+      console.log(response.data);
+      setSuccess("Mastodon token saved successfully!");
+      setError(null);
+      {
+        <Notification color="teal" title="Success!" mb="md">
+          {success}
+        </Notification>;
+      }
+    } catch (err) {
+      console.error(err);
+      {
+        <Notification color="red" title="Fail!" mb="md">
+          Failed to save Mastodon token. Please try again.
+        </Notification>;
+      }
+      setError("");
+    }
+  };
+
+  const fetchMastodonToken = async () => {
+    try {
+      const response = await axios.get(`${API_URL}/api/user/token`, {
+        headers: { Authorization: `Bearer ${storeToken}` },
+      });
+      setMastodonToken(response.data.mastodonToken || "");
+    } catch (err) {
+      console.error(err);
+      setError("Failed to fetch Mastodon token. Please try again.");
+    }
+  };
+
+  useEffect(() => {
+    fetchMastodonToken();
+  }, []);
 
   if (isLoading) {
     return (
@@ -73,16 +99,26 @@ const Profile: React.FC = () => {
           Profile Details
         </Title>
 
-        {authError && (
-          <Alert color="red" mb="md" title="Error">
-            {authError}
-          </Alert>
+        {success && (
+          <Notification
+            color="teal"
+            title="Success!"
+            mb="md"
+            onClose={() => setSuccess(null)}
+          >
+            {success}
+          </Notification>
         )}
 
         {error && (
-          <Alert color="red" mb="md" title="Error">
+          <Notification
+            color="red"
+            title="Error"
+            mb="md"
+            onClose={() => setError(null)}
+          >
             {error}
-          </Alert>
+          </Notification>
         )}
 
         <Group mb="sm">
@@ -95,12 +131,24 @@ const Profile: React.FC = () => {
           <Text>{user?.email}</Text>
         </Group>
 
+        <PasswordInput
+          label="Mastodon Access Token"
+          placeholder="Enter your Mastodon access token"
+          value={mastodonToken}
+          onChange={(e) => setMastodonToken(e.currentTarget.value)}
+          mb="md"
+          visibilityToggleButtonProps={{
+            "aria-label": "Toggle access token visibility",
+          }}
+        />
+
         <Group mt="xl">
-          <Button variant="outline" color="blue" onClick={() =>handleLogout()}>
+          <Button variant="outline" color="blue" onClick={handleLogout}>
             Logout
           </Button>
-          <Button variant="outline" color="red" onClick={() => handleDelete(user?.id)} disabled={loading}>
-            {loading ? "Deleting..." : "Delete Account"}
+
+          <Button variant="outline" color="green" onClick={saveMastodonToken}>
+            Save Mastodon Token
           </Button>
         </Group>
       </Card>
