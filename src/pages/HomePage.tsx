@@ -97,8 +97,10 @@ export function HomePage() {
           placeholder="Number of posts"
           value={limit}
           onChange={(value) => setLimit(typeof value === "number" ? value : 10)}
+          min={1}
+          max={100}
         />
-        <Button onClick={fetchData} loading={loading} mt="lg">
+        <Button onClick={fetchData} loading={loading} mt="lg" color="blue">
           Search
         </Button>
       </Group>
