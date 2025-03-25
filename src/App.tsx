@@ -7,6 +7,7 @@ import Profile from "./auth/Profile";
 import PostToot from "./pages/PostToot";
 import ForgotPassword from "./auth/ForgotPassword";
 import ProtectedRoute from "./components/Protectedroutes";
+import About from "./pages/AboutUs";
 function App() {
   return (
     <BrowserRouter>
@@ -14,6 +15,7 @@ function App() {
         <Routes>
           <Route path="/" element={<HomePage />} />
           <Route path="/post-toot" element={<PostToot />} />
+          <Route path="/about" element={<About />} />
           <Route path="/signup" element={<SignUp />} />
           <Route path="/signin" element={<SignIn />} />
           <Route path="/forgot-password" element={<ForgotPassword />} />

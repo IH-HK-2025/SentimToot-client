@@ -96,7 +96,7 @@ export function HomePage() {
           label="Limit"
           placeholder="Number of posts"
           value={limit}
-          onChange={(value) => setLimit(value)}
+          onChange={(value) => setLimit(typeof value === "number" ? value : 10)}
         />
         <Button onClick={fetchData} loading={loading} mt="lg">
           Search

@@ -1,8 +1,17 @@
 import { ReactNode } from "react";
-import { AppShell, Burger, Anchor, Stack, Group, Text } from "@mantine/core";
+import {
+  AppShell,
+  Burger,
+  Anchor,
+  Stack,
+  Group,
+  Text,
+  Image,
+} from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
 import { Link } from "react-router-dom";
 import AuthDetails from "../auth/AuthDetails";
+import logo from "../assets/Trenditor.png";
 
 interface LayoutProps {
   children: ReactNode;
@@ -43,18 +52,9 @@ export function Layout({ children }: LayoutProps) {
               size="sm"
             />
           </Group>
-
-          <Text
-            size="xl"
-            fw={700}
-            style={{
-              position: "absolute",
-              left: "50%",
-              transform: "translateX(-50%)",
-            }}
-          >
-            Trenditor
-          </Text>
+          <Anchor component={Link} to="/" underline="never">
+            <Image src={logo} style={{ width: "150px" }} alt="Trenditor Logo" />
+          </Anchor>
 
           <AuthDetails />
         </Group>
