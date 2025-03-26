@@ -82,6 +82,19 @@ export function Layout({ children }: LayoutProps) {
               <Text>🆕 Post a Toot</Text>
             </Group>
           </Anchor>
+          
+           {/* User history */}
+           <Anchor component={Link} to="/history" underline="never">
+            <Group gap="xs">
+              <Text>⏳ Your searched tags</Text>
+            </Group>
+          </Anchor>
+
+          <Anchor component={Link} to="/postedtoots" underline="never">
+            <Group gap="xs">
+              <Text>📝 Your posted toots</Text>
+            </Group>
+          </Anchor>
 
           {/* About Us Link */}
           <Anchor component={Link} to="/about" underline="never">

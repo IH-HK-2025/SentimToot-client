@@ -8,6 +8,8 @@ import PostToot from "./pages/PostToot";
 import ForgotPassword from "./auth/ForgotPassword";
 import ProtectedRoute from "./components/Protectedroutes";
 import About from "./pages/AboutUs";
+import { UserHistory } from "./pages/UserActivities";
+import { PostedToots } from "./pages/PostedToots";
 function App() {
   return (
     <BrowserRouter>
@@ -29,6 +31,24 @@ function App() {
               </ProtectedRoute>
             }
           />
+              <Route
+            path="/history"
+            element={
+              <ProtectedRoute>
+                <UserHistory />
+              </ProtectedRoute>
+            }
+          />
+            <Route
+            path="/postedtoots"
+            element={
+              <ProtectedRoute>
+                <PostedToots />
+              </ProtectedRoute>
+            }
+          />
+
+          
         </Routes>
       </Layout>
     </BrowserRouter>
