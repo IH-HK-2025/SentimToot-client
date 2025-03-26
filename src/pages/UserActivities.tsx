@@ -35,7 +35,7 @@ export function UserHistory() {
   const [loading, setLoading] = useState(true);
   const [clearing, setClearing] = useState(false);
   const authContext = useContext(AuthContext);
-  
+
   if (!authContext) {
     throw new Error("AuthContext must be used within an AuthProviderWrapper");
   }
@@ -45,9 +45,12 @@ export function UserHistory() {
   const fetchHistory = async () => {
     try {
       const token = localStorage.getItem("authToken");
-      const response = await axios.get(`${API_URL}/api/auth/users/history/${user?.id}`, {
-        headers: { Authorization: `Bearer ${token}` }
-      });
+      const response = await axios.get(
+        `${API_URL}/api/auth/users/history/${user?.id}`,
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
       setHistory(Array.isArray(response.data) ? response.data : []);
     } catch (error) {
       console.error("Error fetching history:", error);
@@ -62,7 +65,7 @@ export function UserHistory() {
       setClearing(true);
       const token = localStorage.getItem("authToken");
       await axios.delete(`${API_URL}/api/auth/users/history/${user?.id}`, {
-        headers: { Authorization: `Bearer ${token}` }
+        headers: { Authorization: `Bearer ${token}` },
       });
       setHistory([]);
     } catch (error) {
@@ -73,9 +76,9 @@ export function UserHistory() {
   };
 
   // Function to calculate sentiment data for pie chart
-  const getSentimentData = (data: HistoryItem['data']) => {
+  const getSentimentData = (data: HistoryItem["data"]) => {
     const sentimentCounts = data.reduce((acc, item) => {
-      const sentiment = item.sentiment?.toLowerCase() || 'neutral';
+      const sentiment = item.sentiment?.toLowerCase() || "neutral";
       acc[sentiment] = (acc[sentiment] || 0) + 1;
       return acc;
     }, {} as Record<string, number>);
@@ -83,7 +86,8 @@ export function UserHistory() {
     return Object.entries(sentimentCounts).map(([name, value]) => ({
       name: name.charAt(0).toUpperCase() + name.slice(1),
       value,
-      color: name === 'positive' ? 'green' : name === 'negative' ? 'red' : 'gray',
+      color:
+        name === "positive" ? "green" : name === "negative" ? "red" : "yellow",
     }));
   };
 
@@ -102,8 +106,8 @@ export function UserHistory() {
       <Group justify="space-between" mb="md">
         <Title order={2}>Your Search History</Title>
         {displayHistory.length > 0 && (
-          <Anchor 
-            component="button" 
+          <Anchor
+            component="button"
             type="button"
             onClick={clearHistory}
             underline="always"
@@ -114,7 +118,7 @@ export function UserHistory() {
           </Anchor>
         )}
       </Group>
-      
+
       {displayHistory.length === 0 ? (
         <Text>No history found</Text>
       ) : (
@@ -122,17 +126,29 @@ export function UserHistory() {
           {/* Reverse the mapping to show newest first */}
           {[...displayHistory].reverse().map((item, index) => {
             const sentimentData = getSentimentData(item.data);
-            
+
             return (
-              <Card key={displayHistory.length - 1 - index} shadow="sm" p="lg" radius="md" withBorder mb="md">
+              <Card
+                key={displayHistory.length - 1 - index}
+                shadow="sm"
+                p="lg"
+                radius="md"
+                withBorder
+                mb="md"
+              >
                 <Group mb="sm">
                   <Text fw={500}>Searched Tag: {item.keyword}</Text>
                   <Text>Instance: {item.instance}</Text>
                   <Text>Posts Found: {item.count}</Text>
-                  <Badge color={
-                    item.sentiment === "Positive" ? "green" :
-                    item.sentiment === "Negative" ? "red" : "gray"
-                  }>
+                  <Badge
+                    color={
+                      item.sentiment === "Positive"
+                        ? "green"
+                        : item.sentiment === "Negative"
+                        ? "red"
+                        : "yellow"
+                    }
+                  >
                     {`Overall Sentiment: ${item.sentiment}`}
                   </Badge>
                 </Group>
@@ -143,20 +159,24 @@ export function UserHistory() {
                     <Text fw={500} mb="md" size="lg">
                       Sentiment Distribution
                     </Text>
-                    <div style={{ 
-                      width: '100%',
-                      height: '400px',
-                      minHeight: '300px',
-                      display: 'flex',
-                      justifyContent: 'center',
-                      alignItems: 'center'
-                    }}>
-                      <div style={{
-                        width: '100%',
-                        height: '100%',
-                        minWidth: '300px',
-                        minHeight: '300px'
-                      }}>
+                    <div
+                      style={{
+                        width: "100%",
+                        height: "400px",
+                        minHeight: "300px",
+                        display: "flex",
+                        justifyContent: "center",
+                        alignItems: "center",
+                      }}
+                    >
+                      <div
+                        style={{
+                          width: "100%",
+                          height: "100%",
+                          minWidth: "300px",
+                          minHeight: "300px",
+                        }}
+                      >
                         <PieChart
                           data={sentimentData}
                           withLabels
@@ -165,8 +185,8 @@ export function UserHistory() {
                           strokeWidth={1}
                           styles={{
                             root: {
-                              width: '100%',
-                              height: '100%'
+                              width: "100%",
+                              height: "100%",
                             },
                           }}
                         />
@@ -185,10 +205,15 @@ export function UserHistory() {
                       <Group justify="space-between" mb="xs">
                         <Text fw={500}>@{toot.author}</Text>
                         <Group>
-                          <Badge color={
-                            toot.sentiment === "Positive" ? "green" :
-                            toot.sentiment === "Negative" ? "red" : "gray"
-                          }>
+                          <Badge
+                            color={
+                              toot.sentiment === "Positive"
+                                ? "green"
+                                : toot.sentiment === "Negative"
+                                ? "red"
+                                : "yellow"
+                            }
+                          >
                             {toot.sentiment}
                           </Badge>
                           <Text size="sm" c="dimmed">
@@ -197,9 +222,9 @@ export function UserHistory() {
                         </Group>
                       </Group>
                       <Text
-                      style={{ whiteSpace: "pre-wrap" }}
-                      dangerouslySetInnerHTML={{ __html: toot.content }}
-                    />
+                        style={{ whiteSpace: "pre-wrap" }}
+                        dangerouslySetInnerHTML={{ __html: toot.content }}
+                      />
                     </Card>
                   ))}
                 </Stack>

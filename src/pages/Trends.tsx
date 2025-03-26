@@ -72,7 +72,7 @@ export function Trends() {
       case "negative":
         return "red";
       default:
-        return "gray";
+        return "yellow";
     }
   };
 

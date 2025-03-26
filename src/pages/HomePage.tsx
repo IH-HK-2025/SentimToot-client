@@ -38,7 +38,7 @@ function getSentimentColor(sentiment: string) {
     case "negative":
       return "red";
     default:
-      return "gray";
+      return "yellow";
   }
 }
 
@@ -79,9 +79,9 @@ export function HomePage() {
   // Calculate sentiment distribution for the pie chart
   const getSentimentData = () => {
     if (!apiResponse) return [];
-    
+
     const sentimentCounts = apiResponse.data.reduce((acc, item) => {
-      const sentiment = item.sentiment?.toLowerCase() || 'neutral';
+      const sentiment = item.sentiment?.toLowerCase() || "neutral";
       acc[sentiment] = (acc[sentiment] || 0) + 1;
       return acc;
     }, {} as Record<string, number>);
@@ -143,20 +143,24 @@ export function HomePage() {
               <Text fw={500} mb="md" size="lg">
                 Sentiment Distribution
               </Text>
-              <div style={{ 
-                width: '100%',
-                height: '400px',
-                minHeight: '300px',
-                display: 'flex',
-                justifyContent: 'center',
-                alignItems: 'center'
-              }}>
-                <div style={{
-                  width: '100%',
-                  height: '100%',
-                  minWidth: '300px',
-                  minHeight: '300px'
-                }}>
+              <div
+                style={{
+                  width: "100%",
+                  height: "400px",
+                  minHeight: "300px",
+                  display: "flex",
+                  justifyContent: "center",
+                  alignItems: "center",
+                }}
+              >
+                <div
+                  style={{
+                    width: "100%",
+                    height: "100%",
+                    minWidth: "300px",
+                    minHeight: "300px",
+                  }}
+                >
                   <PieChart
                     data={sentimentData}
                     withLabels
@@ -165,8 +169,8 @@ export function HomePage() {
                     strokeWidth={1}
                     styles={{
                       root: {
-                        width: '100%',
-                        height: '100%'
+                        width: "100%",
+                        height: "100%",
                       },
                     }}
                   />
