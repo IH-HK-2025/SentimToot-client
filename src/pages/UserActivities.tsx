@@ -125,7 +125,7 @@ export function UserHistory() {
             return (
               <Card key={index} shadow="sm" p="lg" radius="md" withBorder mb="md">
                 <Group mb="sm">
-                  <Text fw={500}>Keyword: {item.keyword}</Text>
+                  <Text fw={500}>Searched Tag: {item.keyword}</Text>
                   <Text>Instance: {item.instance}</Text>
                   <Text>Posts Found: {item.count}</Text>
                   <Badge color={

@@ -130,7 +130,7 @@ export function HomePage() {
       {apiResponse && (
         <>
           <Group mb="xl">
-            <Text fw={500}>Keyword: {apiResponse.keyword}</Text>
+            <Text fw={500}>Searched Tag: {apiResponse.keyword}</Text>
             <Text>Instance: {apiResponse.instance}</Text>
             <Text>Posts Found: {apiResponse.count}</Text>
             <Badge color={getSentimentColor(apiResponse.sentiment)}>
