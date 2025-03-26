@@ -1,4 +1,4 @@
-import { ReactNode, useRef, useEffect } from "react";
+import { ReactNode } from "react";
 import {
   AppShell,
   Burger,
@@ -18,38 +18,8 @@ interface LayoutProps {
 }
 
 export function Layout({ children }: LayoutProps) {
-  const [mobileOpened, { toggle: toggleMobile, close: closeMobile }] = useDisclosure();
-  const [desktopOpened, { toggle: toggleDesktop, close: closeDesktop }] = useDisclosure(true);
-  const navbarRef = useRef<HTMLDivElement>(null);
-  const mobileBurgerRef = useRef<HTMLButtonElement>(null);
-  const desktopBurgerRef = useRef<HTMLButtonElement>(null);
-
-  useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
-      // Don't close if clicking on either burger button
-      if (
-        (mobileBurgerRef.current && mobileBurgerRef.current.contains(event.target as Node)) ||
-        (desktopBurgerRef.current && desktopBurgerRef.current.contains(event.target as Node))
-      ) {
-        return;
-      }
-
-      // Close mobile menu if open and clicked outside navbar
-      if (mobileOpened && navbarRef.current && !navbarRef.current.contains(event.target as Node)) {
-        closeMobile();
-      }
-
-      // Close desktop menu if open and clicked outside navbar (optional)
-      if (desktopOpened && navbarRef.current && !navbarRef.current.contains(event.target as Node)) {
-        closeDesktop();
-      }
-    };
-
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-    };
-  }, [mobileOpened, desktopOpened, closeMobile, closeDesktop]);
+  const [mobileOpened, { toggle: toggleMobile }] = useDisclosure();
+  const [desktopOpened, { toggle: toggleDesktop }] = useDisclosure(true);
 
   return (
     <AppShell
@@ -65,14 +35,12 @@ export function Layout({ children }: LayoutProps) {
         <Group h="100%" px="md" justify="space-between" style={{ width: "100%" }}>
           <Group>
             <Burger
-              ref={mobileBurgerRef}
               opened={mobileOpened}
               onClick={toggleMobile}
               hiddenFrom="sm"
               size="sm"
             />
             <Burger
-              ref={desktopBurgerRef}
               opened={desktopOpened}
               onClick={toggleDesktop}
               visibleFrom="sm"
@@ -86,7 +54,7 @@ export function Layout({ children }: LayoutProps) {
         </Group>
       </AppShell.Header>
 
-      <AppShell.Navbar p="md" ref={navbarRef}>
+      <AppShell.Navbar p="md">
         <Stack gap="sm" p="sm">
           <Anchor component={Link} to="/" underline="never">
             <Group gap="xs">
