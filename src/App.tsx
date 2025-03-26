@@ -10,6 +10,8 @@ import ProtectedRoute from "./components/Protectedroutes";
 import About from "./pages/AboutUs";
 import { UserHistory } from "./pages/UserActivities";
 import { PostedToots } from "./pages/PostedToots";
+import { Trends } from "./pages/Trends";
+
 function App() {
   return (
     <BrowserRouter>
@@ -17,6 +19,7 @@ function App() {
         <Routes>
           <Route path="/" element={<HomePage />} />
           <Route path="/post-toot" element={<PostToot />} />
+          <Route path="/trends" element={<Trends />} />
           <Route path="/about" element={<About />} />
           <Route path="/signup" element={<SignUp />} />
           <Route path="/signin" element={<SignIn />} />
@@ -31,7 +34,7 @@ function App() {
               </ProtectedRoute>
             }
           />
-              <Route
+          <Route
             path="/history"
             element={
               <ProtectedRoute>
@@ -39,7 +42,7 @@ function App() {
               </ProtectedRoute>
             }
           />
-            <Route
+          <Route
             path="/postedtoots"
             element={
               <ProtectedRoute>
@@ -47,8 +50,6 @@ function App() {
               </ProtectedRoute>
             }
           />
-
-          
         </Routes>
       </Layout>
     </BrowserRouter>
