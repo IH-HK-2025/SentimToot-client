@@ -119,11 +119,12 @@ export function UserHistory() {
         <Text>No history found</Text>
       ) : (
         <Stack>
-          {displayHistory.map((item, index) => {
+          {/* Reverse the mapping to show newest first */}
+          {[...displayHistory].reverse().map((item, index) => {
             const sentimentData = getSentimentData(item.data);
             
             return (
-              <Card key={index} shadow="sm" p="lg" radius="md" withBorder mb="md">
+              <Card key={displayHistory.length - 1 - index} shadow="sm" p="lg" radius="md" withBorder mb="md">
                 <Group mb="sm">
                   <Text fw={500}>Searched Tag: {item.keyword}</Text>
                   <Text>Instance: {item.instance}</Text>
