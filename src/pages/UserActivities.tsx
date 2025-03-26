@@ -196,7 +196,10 @@ export function UserHistory() {
                           </Text>
                         </Group>
                       </Group>
-                      <Text>{toot.content.replace(/<[^>]*>/g, '')}</Text>
+                      <Text
+                      style={{ whiteSpace: "pre-wrap" }}
+                      dangerouslySetInnerHTML={{ __html: toot.content }}
+                    />
                     </Card>
                   ))}
                 </Stack>
