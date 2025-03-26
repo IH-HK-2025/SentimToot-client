@@ -13,6 +13,7 @@ import {
   Button,
   Space,
 } from "@mantine/core";
+import { PieChart } from "@mantine/charts";
 
 interface Data {
   id: string;
@@ -67,7 +68,6 @@ export function HomePage() {
           Authorization: `Bearer ${token}`,
         },
       });
-      console.log(data);
       setApiResponse(data);
     } catch (err) {
       setError(err instanceof Error ? err.message : "An error occurred");
@@ -75,6 +75,26 @@ export function HomePage() {
       setLoading(false);
     }
   }
+
+  // Calculate sentiment distribution for the pie chart
+  const getSentimentData = () => {
+    if (!apiResponse) return [];
+    
+    const sentimentCounts = apiResponse.data.reduce((acc, item) => {
+      const sentiment = item.sentiment?.toLowerCase() || 'neutral';
+      acc[sentiment] = (acc[sentiment] || 0) + 1;
+      return acc;
+    }, {} as Record<string, number>);
+
+    return Object.entries(sentimentCounts).map(([name, value]) => ({
+      name: name.charAt(0).toUpperCase() + name.slice(1),
+      value,
+      color: getSentimentColor(name),
+    }));
+  };
+
+  const sentimentData = getSentimentData();
+  console.log("Sentiment Data:", sentimentData);
 
   return (
     <Container my="xl" size="xl">
@@ -118,6 +138,47 @@ export function HomePage() {
             </Badge>
           </Group>
 
+          {sentimentData.length > 0 ? (
+            <Card withBorder shadow="sm" radius="md" mb="xl" p="lg">
+              <Text fw={500} mb="md" size="lg">
+                Sentiment Distribution
+              </Text>
+              <div style={{ 
+                width: '100%',
+                height: '400px',
+                minHeight: '300px',
+                display: 'flex',
+                justifyContent: 'center',
+                alignItems: 'center'
+              }}>
+                <div style={{
+                  width: '100%',
+                  height: '100%',
+                  minWidth: '300px',
+                  minHeight: '300px'
+                }}>
+                  <PieChart
+                    data={sentimentData}
+                    withLabels
+                    labelsType="percent"
+                    size={300}
+                    strokeWidth={1}
+                    styles={{
+                      root: {
+                        width: '100%',
+                        height: '100%'
+                      },
+                    }}
+                  />
+                </div>
+              </div>
+            </Card>
+          ) : (
+            <Text color="orange" mb="xl">
+              No sentiment data available for visualization
+            </Text>
+          )}
+
           <Stack>
             {apiResponse.data.map((item) => (
               <Card
@@ -131,7 +192,7 @@ export function HomePage() {
                   <Text fw={500}>{item.author}</Text>
                   <Group>
                     <Badge color={getSentimentColor(item.sentiment)}>
-                      {item.sentiment || "Error"}
+                      {item.sentiment || "Neutral"}
                     </Badge>
                     <Text size="sm" c="dimmed">
                       {new Date(item.created_at).toLocaleDateString()}
