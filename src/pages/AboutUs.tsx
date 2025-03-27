@@ -11,7 +11,7 @@ import {
   useMantineTheme,
 } from "@mantine/core";
 
-import logo from "../assets/Trenditor.png";
+import logo from "../assets/SentimToot.png";
 import HamidImage from "../assets/profile/hamid.jpg";
 import KamranImage from "../assets/profile/kamran.png";
 
@@ -35,7 +35,7 @@ function About() {
   return (
     <Container size="md" py="xl" style={{ marginTop: "4rem" }}>
       <Center>
-        <Image src={logo} style={{ width: "500px" }} alt="Trenditor Logo" />
+        <Image src={logo} style={{ width: "500px" }} alt="SentimToot Logo" />
       </Center>
 
       <Text ta="center" mt="xl" mb="xl" maw={600} mx="auto">

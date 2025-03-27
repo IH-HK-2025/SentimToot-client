@@ -99,7 +99,7 @@ export function HomePage() {
   return (
     <Container my="xl" size="xl">
       <Title order={1} mb="md">
-        Welcome to Trenditor
+        Welcome to SentimToot
       </Title>
       <Text size="lg" mb="xl">
         Analyze Reddit trends with AI-powered sentiment analysis.

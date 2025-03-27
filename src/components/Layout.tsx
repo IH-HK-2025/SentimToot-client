@@ -11,7 +11,7 @@ import {
 import { useDisclosure } from "@mantine/hooks";
 import { Link } from "react-router-dom";
 import AuthDetails from "../auth/AuthDetails";
-import logo from "../assets/Trenditor.png";
+import logo from "../assets/SentimToot.png";
 
 interface LayoutProps {
   children: ReactNode;
@@ -32,7 +32,12 @@ export function Layout({ children }: LayoutProps) {
       padding="md"
     >
       <AppShell.Header>
-        <Group h="100%" px="md" justify="space-between" style={{ width: "100%" }}>
+        <Group
+          h="100%"
+          px="md"
+          justify="space-between"
+          style={{ width: "100%" }}
+        >
           <Group>
             <Burger
               opened={mobileOpened}
@@ -48,7 +53,11 @@ export function Layout({ children }: LayoutProps) {
             />
           </Group>
           <Anchor component={Link} to="/" underline="never">
-            <Image src={logo} style={{ width: "150px" }} alt="Trenditor Logo" />
+            <Image
+              src={logo}
+              style={{ width: "150px" }}
+              alt="SentimToot Logo"
+            />
           </Anchor>
           <AuthDetails />
         </Group>
@@ -89,13 +98,11 @@ export function Layout({ children }: LayoutProps) {
         </Stack>
       </AppShell.Navbar>
 
-      <AppShell.Main>
-        {children}
-      </AppShell.Main>
+      <AppShell.Main>{children}</AppShell.Main>
 
       <AppShell.Footer p="md">
         <Text size="sm" c="dimmed" ta="center">
-          © 2025 Trenditor. All rights reserved.
+          © 2025 SentimToot. All rights reserved.
         </Text>
       </AppShell.Footer>
     </AppShell>
