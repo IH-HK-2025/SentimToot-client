@@ -113,7 +113,7 @@ export function Trends() {
       <Group justify="space-between" mb="md">
         <Title order={2}>Analyzed Trends</Title>
       </Group>
-
+  
       <Card withBorder shadow="sm" mb="xl">
         <form onSubmit={form.onSubmit(handleSubmit)}>
           <Group align="flex-end" grow>
@@ -133,13 +133,13 @@ export function Trends() {
           </Group>
         </form>
       </Card>
-
+  
       {error && (
         <Alert color="red" title="Error" mb="xl">
           {error}
         </Alert>
       )}
-
+  
       {results?.data?.trends?.length === 0 ? (
         <Text>No trends analyzed yet</Text>
       ) : (
@@ -163,43 +163,46 @@ export function Trends() {
                   Overall Sentiment: {trend.overallSentiment}
                 </Badge>
               </Group>
-
-              <Card withBorder shadow="sm" radius="md" mb="xl" p="lg">
-                <Text fw={500} mb="md" size="lg">
-                  Sentiment Distribution
-                </Text>
-                <Box h={400}>
-                  <PieChart
-                    data={[
-                      {
-                        name: "Positive",
-                        value: trend.sentimentDistribution.positive,
-                        color: "green",
-                      },
-                      {
-                        name: "Neutral",
-                        value: trend.sentimentDistribution.neutral,
-                        color: "yellow",
-                      },
-                      {
-                        name: "Negative",
-                        value: trend.sentimentDistribution.negative,
-                        color: "red",
-                      },
-                    ]}
-                    withLabels
-                    labelsType="percent"
-                    size={300}
-                    style={{
-                      width: "100%",
-                      height: "100%",
-                    }}
-                    strokeWidth={1}
-                    mx="auto"
-                  />
-                </Box>
-              </Card>
-
+  
+              {/* Show pie chart if numPosts > 1, regardless of numTrends */}
+              {form.values.numPosts > 1 && (
+                <Card withBorder shadow="sm" radius="md" mb="xl" p="lg">
+                  <Text fw={500} mb="md" size="lg">
+                    Sentiment Distribution
+                  </Text>
+                  <Box h={400}>
+                    <PieChart
+                      data={[
+                        {
+                          name: "Positive",
+                          value: trend.sentimentDistribution.positive,
+                          color: "green",
+                        },
+                        {
+                          name: "Neutral",
+                          value: trend.sentimentDistribution.neutral,
+                          color: "yellow",
+                        },
+                        {
+                          name: "Negative",
+                          value: trend.sentimentDistribution.negative,
+                          color: "red",
+                        },
+                      ]}
+                      withLabels
+                      labelsType="percent"
+                      size={300}
+                      style={{
+                        width: "100%",
+                        height: "100%",
+                      }}
+                      strokeWidth={1}
+                      mx="auto"
+                    />
+                  </Box>
+                </Card>
+              )}
+  
               <Stack>
                 {trend.posts.map((post) => (
                   <Card key={post.id} p="md" withBorder>
@@ -225,7 +228,7 @@ export function Trends() {
           ))}
         </Stack>
       )}
-
+  
       {loading && (
         <Group justify="center" mt="xl">
           <Loader size="xl" variant="bars" />

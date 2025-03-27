@@ -12,6 +12,8 @@ import {
   Badge,
   Button,
 } from "@mantine/core";
+import { PieChart } from "@mantine/charts";
+import { IconPencil, IconTrash } from "@tabler/icons-react";
 
 interface Toot {
   id: string;
@@ -26,6 +28,7 @@ export function PostedToots() {
   const [toots, setToots] = useState<Toot[]>([]);
   const [loading, setLoading] = useState(true);
   const [deletingId, setDeletingId] = useState<string | null>(null);
+  const [editingId, setEditingId] = useState<string | null>(null);
   const authContext = useContext(AuthContext);
 
   if (!authContext) {
@@ -67,6 +70,12 @@ export function PostedToots() {
     }
   };
 
+  const editToot = (tootId: string) => {
+    setEditingId(tootId);
+    // Add your edit logic here
+    console.log("Editing toot with ID:", tootId);
+  };
+
   useEffect(() => {
     if (user?.id) {
       fetchToots();
@@ -82,24 +91,82 @@ export function PostedToots() {
   };
 
   const getSentimentColor = (sentiment: string) => {
-    switch (sentiment) {
-      case "Positive":
+    switch (sentiment.toLowerCase()) {
+      case "positive":
         return "green";
-      case "Negative":
+      case "negative":
         return "red";
       default:
         return "yellow";
     }
   };
 
-  if (loading)
-    return <Container>Loading Toots from your Mastodon Account...</Container>;
+  // Calculate sentiment distribution for pie chart
+  const getSentimentData = () => {
+    const sentimentCounts = toots.reduce((acc, toot) => {
+      const sentiment = toot.sentiment.toLowerCase();
+      acc[sentiment] = (acc[sentiment] || 0) + 1;
+      return acc;
+    }, {} as Record<string, number>);
+
+    return Object.entries(sentimentCounts).map(([name, value]) => ({
+      name: name.charAt(0).toUpperCase() + name.slice(1),
+      value,
+      color: getSentimentColor(name),
+    }));
+  };
+
+  const sentimentData = getSentimentData();
+
+  if (loading) return <Container>Loading Toots from your Mastodon Account...</Container>;
 
   return (
     <Container>
       <Group justify="space-between" mb="md">
         <Title order={2}>Your Posted Toots</Title>
       </Group>
+
+      {/* Sentiment Distribution Pie Chart */}
+      {toots.length > 1 && (
+        <Card withBorder shadow="sm" radius="md" mb="xl" p="lg">
+          <Text fw={500} mb="md" size="lg">
+            Sentiment Distribution
+          </Text>
+          <div
+            style={{
+              width: "100%",
+              height: "400px",
+              minHeight: "300px",
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+            }}
+          >
+            <div
+              style={{
+                width: "100%",
+                height: "100%",
+                minWidth: "300px",
+                minHeight: "300px",
+              }}
+            >
+              <PieChart
+                          data={sentimentData}
+                          withLabels
+                          labelsType="percent"
+                          size={300}
+                          strokeWidth={1}
+                          styles={{
+                            root: {
+                              width: "100%",
+                              height: "100%",
+                            },
+                          }}
+                        />
+            </div>
+          </div>
+        </Card>
+      )}
 
       {toots.length === 0 ? (
         <Text>No toots found</Text>
@@ -120,8 +187,19 @@ export function PostedToots() {
                   </Badge>
                   <Button
                     variant="outline"
+                    color="blue"
+                    size="xs"
+                    leftSection={<IconPencil size={14} />}
+                    onClick={() => editToot(toot.id)}
+                    loading={editingId === toot.id}
+                  >
+                    Edit
+                  </Button>
+                  <Button
+                    variant="outline"
                     color="red"
                     size="xs"
+                    leftSection={<IconTrash size={14} />}
                     onClick={() => deleteToot(toot.id)}
                     loading={deletingId === toot.id}
                   >
