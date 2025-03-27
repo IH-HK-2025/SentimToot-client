@@ -11,6 +11,7 @@ import {
   Group,
   Badge,
   Button,
+  Textarea,
 } from "@mantine/core";
 import { PieChart } from "@mantine/charts";
 
@@ -23,11 +24,16 @@ interface Toot {
 
 const API_URL = import.meta.env.VITE_API_URL;
 
+const stripHtmlTags = (html: string) => {
+  return html.replace(/<\/?[^>]+(>|$)/g, "");
+};
+
 export function PostedToots() {
   const [toots, setToots] = useState<Toot[]>([]);
   const [loading, setLoading] = useState(true);
   const [deletingId, setDeletingId] = useState<string | null>(null);
   const [editingId, setEditingId] = useState<string | null>(null);
+  const [editContent, setEditContent] = useState<string>("");
   const authContext = useContext(AuthContext);
 
   if (!authContext) {
@@ -61,18 +67,41 @@ export function PostedToots() {
       await axios.delete(`${API_URL}/api/auth/toots/${tootId}`, {
         headers: { Authorization: `Bearer ${token}` },
       });
-      setToots(toots.filter((toot) => toot.id !== tootId));
+      setToots((prev) => prev.filter((toot) => toot.id !== tootId));
     } catch (error) {
-      console.error("Error deleting toot:", error);
+      console.error("Delete error:", error);
     } finally {
       setDeletingId(null);
     }
   };
 
-  const editToot = (tootId: string) => {
-    setEditingId(tootId);
-    // Add your edit logic here
-    console.log("Editing toot with ID:", tootId);
+  const editToot = async (tootId: string) => {
+    if (!editContent) return;
+
+    try {
+      const token = localStorage.getItem("authToken");
+      const { data } = await axios.patch(
+        `${API_URL}/api/auth/edit-toots/${tootId}`,
+        { status: editContent },
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
+
+      setToots((prev) =>
+        prev.map((toot) =>
+          toot.id === tootId
+            ? {
+                ...toot,
+                content: data.content,
+                sentiment: data.sentiment,
+              }
+            : toot
+        )
+      );
+
+      setEditingId(null);
+    } catch (error) {
+      console.error("Edit error:", error);
+    }
   };
 
   useEffect(() => {
@@ -90,6 +119,7 @@ export function PostedToots() {
   };
 
   const getSentimentColor = (sentiment: string) => {
+    console.log(sentiment);
     switch (sentiment.toLowerCase()) {
       case "positive":
         return "green";
@@ -103,6 +133,8 @@ export function PostedToots() {
   // Calculate sentiment distribution for pie chart
   const getSentimentData = () => {
     const sentimentCounts = toots.reduce((acc, toot) => {
+      if (!toot.sentiment) return acc;
+
       const sentiment = toot.sentiment.toLowerCase();
       acc[sentiment] = (acc[sentiment] || 0) + 1;
       return acc;
@@ -117,7 +149,8 @@ export function PostedToots() {
 
   const sentimentData = getSentimentData();
 
-  if (loading) return <Container>Loading Toots from your Mastodon Account...</Container>;
+  if (loading)
+    return <Container>Loading Toots from your Mastodon Account...</Container>;
 
   return (
     <Container>
@@ -188,8 +221,10 @@ export function PostedToots() {
                     variant="outline"
                     color="blue"
                     size="xs"
-                    onClick={() => editToot(toot.id)}
-                    loading={editingId === toot.id}
+                    onClick={() => {
+                      setEditingId(toot.id);
+                      setEditContent(stripHtmlTags(toot.content)); // Set plain text
+                    }}
                   >
                     Edit
                   </Button>
@@ -205,10 +240,37 @@ export function PostedToots() {
                 </Group>
               </Group>
 
-              <Text
-                style={{ whiteSpace: "pre-wrap" }}
-                dangerouslySetInnerHTML={{ __html: toot.content }}
-              />
+              {editingId === toot.id ? (
+                <>
+                  <Textarea
+                    value={editContent}
+                    onChange={(e) => setEditContent(e.target.value)}
+                    autosize
+                    minRows={3}
+                  />
+                  <Group mt="sm">
+                    <Button
+                      color="green"
+                      size="xs"
+                      onClick={() => editToot(toot.id)}
+                    >
+                      Save
+                    </Button>
+                    <Button
+                      variant="subtle"
+                      size="xs"
+                      onClick={() => setEditingId(null)}
+                    >
+                      Cancel
+                    </Button>
+                  </Group>
+                </>
+              ) : (
+                <Text
+                  style={{ whiteSpace: "pre-wrap" }}
+                  dangerouslySetInnerHTML={{ __html: toot.content }}
+                />
+              )}
             </Card>
           ))}
         </Stack>
