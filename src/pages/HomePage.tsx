@@ -102,7 +102,7 @@ export function HomePage() {
         Welcome to SentimToot
       </Title>
       <Text size="lg" mb="xl">
-        Analyze Reddit trends with AI-powered sentiment analysis.
+        Analyze Mastodon (German based social media) trends with AI-powered sentiment analysis.
       </Text>
 
       <Group mb="xl" gap="sm" grow>

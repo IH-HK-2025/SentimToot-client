@@ -104,7 +104,7 @@ export function UserHistory() {
   return (
     <Container>
       <Group justify="space-between" mb="md">
-        <Title order={2}>Your Search History</Title>
+        <Title order={2}>Mastodon tags searched by you</Title>
         {displayHistory.length > 0 && (
           <Anchor
             component="button"

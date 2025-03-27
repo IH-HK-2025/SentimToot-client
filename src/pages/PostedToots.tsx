@@ -13,7 +13,6 @@ import {
   Button,
 } from "@mantine/core";
 import { PieChart } from "@mantine/charts";
-import { IconPencil, IconTrash } from "@tabler/icons-react";
 
 interface Toot {
   id: string;
@@ -123,7 +122,7 @@ export function PostedToots() {
   return (
     <Container>
       <Group justify="space-between" mb="md">
-        <Title order={2}>Your Posted Toots</Title>
+        <Title order={2}>Sentiment analysis of your Toots</Title>
       </Group>
 
       {/* Sentiment Distribution Pie Chart */}
@@ -151,18 +150,18 @@ export function PostedToots() {
               }}
             >
               <PieChart
-                          data={sentimentData}
-                          withLabels
-                          labelsType="percent"
-                          size={300}
-                          strokeWidth={1}
-                          styles={{
-                            root: {
-                              width: "100%",
-                              height: "100%",
-                            },
-                          }}
-                        />
+                data={sentimentData}
+                withLabels
+                labelsType="percent"
+                size={300}
+                strokeWidth={1}
+                styles={{
+                  root: {
+                    width: "100%",
+                    height: "100%",
+                  },
+                }}
+              />
             </div>
           </div>
         </Card>
@@ -189,7 +188,6 @@ export function PostedToots() {
                     variant="outline"
                     color="blue"
                     size="xs"
-                    leftSection={<IconPencil size={14} />}
                     onClick={() => editToot(toot.id)}
                     loading={editingId === toot.id}
                   >
@@ -199,7 +197,6 @@ export function PostedToots() {
                     variant="outline"
                     color="red"
                     size="xs"
-                    leftSection={<IconTrash size={14} />}
                     onClick={() => deleteToot(toot.id)}
                     loading={deletingId === toot.id}
                   >

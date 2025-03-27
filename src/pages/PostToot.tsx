@@ -64,10 +64,10 @@ const PostToot = () => {
   return (
     <Container size="sm" py="xl">
       <Title order={1} mb="md">
-        Post a Toot
+        Post a Toot directly on your Mastodon profile
       </Title>
       <Text c="dimmed" mb="xl">
-        Share your thoughts directly on mastodon.social!
+        Share your thoughts directly....
       </Text>
 
       <form onSubmit={form.onSubmit(handleSubmit)}>

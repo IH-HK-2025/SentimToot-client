@@ -111,7 +111,7 @@ export function Trends() {
   return (
     <Container>
       <Group justify="space-between" mb="md">
-        <Title order={2}>Analyzed Trends</Title>
+        <Title order={2}>Analyze Mastodon trends</Title>
       </Group>
   
       <Card withBorder shadow="sm" mb="xl">
