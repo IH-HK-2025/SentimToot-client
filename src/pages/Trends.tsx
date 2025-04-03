@@ -170,7 +170,14 @@ export function Trends() {
                   <Text fw={500} mb="md" size="lg">
                     Sentiment Distribution
                   </Text>
-                  <Box h={400}>
+                  <Box  style={{
+                  width: "100%",
+                  height: "400px",
+                  minHeight: "300px",
+                  display: "flex",
+                  justifyContent: "center",
+                  alignItems: "center",
+                }}>
                     <PieChart
                       data={[
                         {
